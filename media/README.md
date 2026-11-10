@@ -1,11 +1,13 @@
-# 演示媒体
+# Demo Media
 
-三个重点项目的演示视频以 GitHub 原生附件形式托管，并在各自项目详情页顶部直接播放。
+**English** | [简体中文](README.zh-CN.md)
 
-| 项目 | 演示内容 | 视频附件 |
+The three featured videos are hosted as GitHub attachments and embedded at the top of their project pages.
+
+| Project | Content | Video |
 | --- | --- | --- |
-| 医疗康复平台 | 康复训练动作识别演示：被动前屈上举（面部已打码）。 | [视频](https://github.com/user-attachments/assets/608758d1-0336-4f7e-a8fc-b27996c7142d) |
-| AI 家具设计与售后服务平台 | 家具设计与服务平台演示。 | [视频](https://github.com/user-attachments/assets/f14510f4-5126-4eec-a8e8-b27d19577775) |
-| 嵌入式 AI 伴游终端 | 集成 Demo 演示：功能测试通过后，自行设计 PCB，并使用 3D 打印外壳完成组装。 | [视频](https://github.com/user-attachments/assets/fc9c61fb-e71e-4076-965f-23cea5caacbf) |
+| Medical rehabilitation | Passive forward arm elevation; face obscured | [Video](https://github.com/user-attachments/assets/608758d1-0336-4f7e-a8fc-b27996c7142d) |
+| Furniture design and after-sales | Project demonstration | [Video](https://github.com/user-attachments/assets/f14510f4-5126-4eec-a8e8-b27d19577775) |
+| Embedded AI companion | Integrated demo with my PCB design and a 3D-printed enclosure | [Video](https://github.com/user-attachments/assets/fc9c61fb-e71e-4076-965f-23cea5caacbf) |
 
-嵌入式项目的 `embedded-ai-companion/early-breadboard-prototype.jpg` 为早期面包板测试照片；视频展示后续自行设计 PCB、配合 3D 打印外壳完成的集成 Demo。
+`embedded-ai-companion/early-breadboard-prototype.jpg` shows the earlier breadboard test setup. The video shows the later integrated device.

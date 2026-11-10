@@ -1,7 +1,8 @@
-# Publish only the Chinese portfolio and its presentation materials.
+# Publish only the bilingual portfolio and its presentation materials.
 /*
 !/.gitignore
 !/README.md
+!/README.zh-CN.md
 !/projects/
 !/media/
 __pycache__/

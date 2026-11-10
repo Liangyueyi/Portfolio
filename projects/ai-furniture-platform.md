@@ -1,123 +1,125 @@
-# AI 家具设计与售后服务平台
+# AI Furniture Design & After-sales Platform
 
-[返回作品集首页](../README.md)
+[Back to portfolio](../README.md)
 
-## 演示视频
+**English** | [简体中文](zh-CN/ai-furniture-platform.md)
+
+## Demo
 
 https://github.com/user-attachments/assets/f14510f4-5126-4eec-a8e8-b27d19577775
 
-家具设计与服务平台演示。
+Furniture design and service platform demonstration.
 
-> 独立开发与集成 · CAD 与 3D 交互 · 生成式设计 · 多模态售后服务
+> Independent development and integration · CAD and 3D interaction · Generative design · Multimodal after-sales support
 
-## 项目定位
+## Project Scope
 
-这是围绕家具业务开发的整体项目，包含设计端工具和售后服务小程序。设计端连接 CAD 图纸、空间白模、意向参考与效果图生成；售后端连接用户咨询、图片和语音输入、工单处理及管理分析。两部分共同服务家具业务，按各自使用场景组织模块。
+One furniture project combining design tools and a WeChat after-sales application. The design side connects CAD drawings, spatial white models, references and visualisation generation. The service side connects text, image and speech enquiries with tickets and management analysis. The modules support the same business while retaining task-specific workflows.
 
-我独立完成应用开发与系统集成，涵盖前后端、设计工作流、AI 接入及部署。白模与效果图相关代码、家具小程序保存在不同工程目录，但属于同一项目。现有模块采用不同存储方式，不将它们描述成已经共用一套数据库或自动贯通全部业务数据。
+I independently developed and integrated the applications, including front ends, back ends, design workflows, AI services and deployment. The design tools and Mini Program reside in separate codebases. Existing modules use different storage arrangements; they are not presented as sharing one database or having fully automated data synchronisation.
 
-## 业务流程
+## Workflows
 
-**设计流程：** 上传 CAD 图纸与意向参考 → 分析空间、房间及区域 → 校准尺度、建立白模 → 调整场景与视角 → 组织风格及参考 → 生成并检查效果图 → 保存场景和图像。
+**Design:** Upload CAD and references → analyse rooms and regions → calibrate scale and build a white model → adjust scene and camera → organise styles and references → generate and inspect visualisations → save scenes and images.
 
-**售后流程：** 微信登录 → 通过文字、图片或语音咨询 → AI 回答并辅助提取问题 → 建立工单 → 管理人员处理 → 用户查看进度、确认与评价。
+**After-sales:** WeChat login → text, image or speech enquiry → AI response and issue extraction → create ticket → staff follow-up → customer checks progress, confirms resolution and rates service.
 
-## 我的工作
+## My Contribution
 
-- 开发 CAD 文件处理、空间图像分析、白模生成与场景管理服务。
-- 开发 Three.js 白模工作台，实现块体调整、视角保存及截图。
-- 组织房间、区域、风格和参考图处理流程，接入视觉语言与图像生成服务。
-- 开发微信小程序及售后后端，连接 AI 问答、语音、工单与管理分析。
-- 完成各模块接口、存储及模型服务配置，并进行场景与流程验证。
+- Developed CAD processing, spatial-image analysis, white-model generation and scene services.
+- Built a Three.js workspace for adjusting blocks, saving views and taking screenshots.
+- Organised room, region, style and reference-image workflows; integrated vision-language and image-generation capabilities.
+- Developed the WeChat application and service backend for AI support, speech, tickets and analysis.
+- Configured interfaces, storage and model services, and validated scenes and workflows.
 
-## 系统架构
+## System Architecture
 
 ```mermaid
 flowchart TB
-    subgraph Design[设计端]
-        U[CAD 图纸与意向参考] --> UP[上传与文件处理]
-        UP --> AN[CAD 图像与空间分析]
-        AN --> WM[尺度校准与白模生成]
-        WM --> UI[Three.js 可编辑场景]
-        AN --> CT[房间 区域 风格与参考组织]
-        CT --> GEN[图像生成服务适配]
-        UI --> SAVE[场景 视角与截图保存]
-        GEN --> IMG[效果图输出]
+    subgraph Design[Design Tools]
+        U[CAD Drawings and References] --> UP[Upload and File Processing]
+        UP --> AN[CAD Image and Spatial Analysis]
+        AN --> WM[Scale Calibration and White-model Generation]
+        WM --> UI[Editable Three.js Scene]
+        AN --> CT[Rooms Regions Styles and References]
+        CT --> GEN[Image-generation Adapter]
+        UI --> SAVE[Scene View and Screenshot Storage]
+        GEN --> IMG[Visualisation Output]
     end
-    subgraph Service[售后端]
-        WX[微信小程序] --> API[FastAPI 业务接口]
-        API --> CHAT[多模态 AI 问答]
-        CHAT --> MM[MiniMax]
-        API --> ASR[豆包流式 ASR]
-        API --> TK[工单与评价服务]
-        API --> TOOL[管理分析与工具调用]
+    subgraph Service[After-sales Services]
+        WX[WeChat Mini Program] --> API[FastAPI Business APIs]
+        API --> CHAT[Multimodal Support]
+        CHAT --> MM[LLM]
+        API --> ASR[Streaming ASR]
+        API --> TK[Tickets and Ratings]
+        API --> TOOL[Management Analysis and Tool Calls]
         TK --> DB[(PostgreSQL)]
         TOOL --> DB
         API --> CACHE[(Redis)]
     end
 ```
 
-### 设计端模块
+### Design Modules
 
-| 模块 | 职责与数据关系 |
+| Module | Responsibility and data relationships |
 | --- | --- |
-| 项目与文件入口 | 接收 CAD、图像及 PDF 等材料，按项目组织输入文件和处理结果 |
-| CAD 与参考分析 | 文件转换、图像预处理、图纸分类、网格与区域分析；从意向板提取空间和风格线索 |
-| 白模构建 | 校准尺度，依据图像分析结果生成可编辑空间块体，为查看与调整提供场景数据 |
-| 场景工作台 | Three.js 展示与编辑白模，保存视角、场景状态和截图；轻量白模模块通过 JSON 与图像落盘 |
-| 房间与区域工作流 | 以房间或区域为单位组织参考板、风格配置、布局及控制图，关联对应的生成任务 |
-| 模型服务适配 | 视觉语言服务辅助理解材料，图像生成适配层连接外部生成服务；保留模拟生成路径用于流程验证 |
-| 输出管理 | 保存效果图及场景产物，供设计人员对照原图、参考与空间结构检查 |
+| Project and file entry | Accepts CAD, images and PDF documents; organises inputs and outputs by project |
+| CAD and reference analysis | Conversion, preprocessing, drawing classification, grid / region analysis and spatial / style cues from reference boards |
+| White-model construction | Calibrates scale and converts analysis into editable spatial blocks |
+| Scene workspace | Three.js viewing and editing, saved camera views, scene state and screenshots; the lightweight module persists JSON and images |
+| Room and region workflows | Associates reference boards, styles, layouts and control images with generation tasks |
+| Model adapters | Vision-language analysis and external image-generation services; a simulated path supports workflow validation |
+| Output management | Stores visualisations and scene outputs for comparison with drawings, references and spatial structure |
 
-### 售后端模块
+### After-sales Modules
 
-| 模块 | 职责与数据关系 |
+| Module | Responsibility and data relationships |
 | --- | --- |
-| 客户端 | 原生微信小程序承载登录、流式对话、图片上传、语音输入、工单进度及评价 |
-| 接口与认证 | FastAPI / JWT 组织业务接口，连接微信登录及管理员登录 |
-| 对话与语音 | MiniMax 提供多模态问答，豆包流式 ASR 转写用户语音，回复逐步返回前端 |
-| 工单服务 | 从咨询内容提取摘要与分类，保存问题及照片，管理状态流转、处理记录和用户评价 |
-| 管理分析 | 通过工具调用查询工单数据，支持筛选、统计及问题分析 |
-| 持久化 | PostgreSQL 保存用户、对话及工单业务数据，Redis 提供缓存，Alembic 管理数据结构迁移 |
+| Client | Native WeChat Mini Program for login, streaming conversations, images, speech, tickets and ratings |
+| APIs and authentication | FastAPI / JWT interfaces with WeChat and administrator login |
+| Conversation and speech | LLM-based multimodal support and streaming ASR; incremental replies to the client |
+| Ticket services | Issue summaries, classification, photos, state transitions, handling records and ratings |
+| Management analysis | Tool-based ticket queries, filters, statistics and issue analysis |
+| Persistence | PostgreSQL for users, conversations and tickets; Redis caching; Alembic migrations |
 
-## 实现重点
+## Implementation Highlights
 
-### 从二维图纸到可调整的空间表达
+### From 2D Drawings to Editable Spatial Models
 
-CAD 平面图与透视效果图承担不同用途。项目先处理尺度、空间结构和白模交互，再组织图像生成所需参考，让设计人员能够检查布局、调整块体及选择视角。白模模块定位于轻量空间工作台。
+Plans and perspective visualisations serve different purposes. The workflow first handles scale, structure and white-model interaction, allowing designers to inspect layouts, adjust blocks and select views before organising image-generation references. The white-model module is a lightweight spatial workspace.
 
-### 将参考资料拆成可处理的设计上下文
+### Turning References into Design Context
 
-意向板包含风格、材料、家具和空间位置等不同信息。处理流程按房间、区域及参考主题组织这些内容，再关联布局、控制图与生成任务。空间、定制柜体和软装资料可分阶段处理，减少将全部要求挤进一次生成请求的复杂度。
+Reference boards combine styles, materials, furniture and spatial cues. The workflow organises these by room, region and theme, then connects them to layouts, control images and generation tasks. Space, cabinetry and furnishings can be processed separately to make individual requests manageable.
 
-### 把咨询接入售后闭环
+### Connecting Conversations to Service Resolution
 
-售后小程序保留文字、图片和语音入口，把对话延伸至工单分类、处理记录、进度和评价。用户能够继续跟进问题，管理侧能够基于结构化工单查询和分析，AI 问答成为业务流程的一环。
+Text, image and speech support continues into ticket classification, handling, progress and customer ratings. Customers can follow an issue, while managers query structured records. AI support is one part of the service workflow.
 
-## 核心难点与处理
+## Challenges and Responses
 
-### CAD 图纸中墙体与柜体的结构歧义
+### Ambiguity Between Walls and Cabinets in CAD Plans
 
-**难点：** 墙体和柜体在平面图中都可能表现为细长矩形、平行线或贴墙封闭轮廓。若仅按外形分类，柜体容易被识别为墙体，墙体也可能被生成成家具块体，错误会继续传递到空间白模和效果图。
+**Challenge:** Both can appear as elongated rectangles, parallel lines or closed contours against a wall. Shape-only classification can turn cabinets into walls or walls into furniture, propagating errors into white models and generated views.
 
-**处理：** 在图像预处理后，将房间边界、内部墙体、开口与家具块体分别检测。墙体检测使用横纵方向的线条分布和连续性，家具分类结合块体面积、长宽比及距墙距离；语义分析则使用带坐标网格的图纸，先识别家具与结构元素，再按元素分布组织功能区域。
+**Response:** Separately detect room boundaries, internal walls, openings and furniture after preprocessing. Wall rules inspect horizontal / vertical line distribution and continuity; furniture classification considers area, aspect ratio and wall distance. Semantic analysis uses coordinate grids to identify elements and organise functional regions.
 
-**校核：** 把分析结果转成可查看和调整的白模，让设计人员检查墙体、柜体及通行关系后再使用后续输出。现有规则为不同元素提供区分依据，对符号风格变化、贴墙柜与复杂储物墙仍需结合图纸样本调整，不能只依赖单一几何阈值。
+**Verification:** Convert results into editable white models so designers can inspect wall, cabinet and circulation relationships. Rules still require adjustment for drawing styles, wall-mounted cabinets and complex storage walls; a single geometric threshold is insufficient.
 
-### 二维结构、空间尺度与生成结果的衔接
+### Preserving Structure and Scale Through Generation
 
-**难点：** 平面图表达位置和尺寸，效果图表达透视及材质。直接生成图像容易保留风格却改变空间布局；柜体尺寸、墙面关系或门窗开口发生偏移时，视觉效果仍可能看似合理。
+**Challenge:** Plans encode positions and dimensions; visualisations encode perspective and materials. Generated images can preserve style while changing layout. Cabinet dimensions or openings may drift while the image remains visually plausible.
 
-**处理：** 将尺度校准、白模搭建和视角选择安排在图像生成之前，场景数据与生成图像分别管理。房间及区域工作流组织布局、控制图和参考板，按空间、柜体与软装拆分上下文，使生成任务具有明确的结构与风格输入。白模与截图为人工比对提供参照。
+**Response:** Calibrate scale, build the white model and select views before generation. Manage scene data and images separately, and organise layouts, control images and references by room or region. Separate spatial, cabinetry and furnishing context. White models and screenshots support manual comparison.
 
-### 意向参考的语义与位置对应
+### Matching References to Their Intended Locations
 
-**难点：** 一张意向板可能混合材料、家具、颜色与局部设计，参考内容未必属于同一空间。未经区分地使用全部参考，容易把局部柜体要求施加到整个房间。
+**Challenge:** A reference board may mix materials, colours and details from different spaces. Applying all references together can spread a local cabinet requirement across an entire room.
 
-**处理：** 通过参考主题、区域和房间组织分析结果，分别建立风格配置和生成输入；在工作流中关联 CAD 区域、参考图与具体任务。设计人员可按区域检查输出，定位需要修改的结构或参考条件。
+**Response:** Associate analysis, style settings and generation inputs with reference themes, rooms and CAD regions. Designers inspect outputs by region to identify the structure or reference conditions requiring revision.
 
-## 工程成果与评估方向
+## Outcomes and Evaluation
 
-形成 CAD 白模工作台、家装效果图处理工作流和家具售后小程序等模块。设计端保留 API、图纸分析、区域处理与流程验证代码，售后端形成用户、对话、工单和管理服务。
+Delivered a CAD white-model workspace, interior-visualisation workflows and an after-sales Mini Program. Design modules include APIs, drawing analysis, region processing and workflow validation; service modules cover users, conversations, tickets and administration.
 
-后续可以分别评估白模空间结构的一致性、参考条件保留程度、设计人员修改成本，以及工单分类和问题解决情况；图像生成效果不直接等同于尺寸准确的施工设计。
+Evaluation can examine spatial consistency, reference retention, designer correction effort, ticket classification and issue resolution. Generated visualisations are not evidence of dimensionally accurate construction drawings.

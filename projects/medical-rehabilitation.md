@@ -1,122 +1,132 @@
-# 医疗康复平台
+# Medical Rehabilitation Platform
 
-[返回作品集首页](../README.md)
+[Back to portfolio](../README.md)
 
-## 演示视频
+**English** | [简体中文](zh-CN/medical-rehabilitation.md)
+
+## Demo
 
 https://github.com/user-attachments/assets/608758d1-0336-4f7e-a8fc-b27996c7142d
 
-康复训练动作识别演示：被动前屈上举（面部已打码）。
+Training motion-recognition demo: passive forward arm elevation, with the participant's face obscured.
 
-> 独立开发 · 实时多模态交互 · 医疗业务系统 · Web / H5 / 微信小程序
+> Independent development · Real-time multimodal interaction · Clinical workflows · Web / H5 / WeChat Mini Programs
 
-## 项目背景
+## Background
 
-康复训练需要把医生的计划转化为患者能够理解、执行和持续记录的日常动作。本项目将康复计划、训练指导和阶段评估放入同一系统，连接医生的管理工作与患者的训练过程。
+Rehabilitation software needs to translate clinician-prescribed plans into exercises that patients can understand, perform and record. This platform brings plans, training feedback and periodic assessments into one workflow, connecting clinical management with everyday patient training.
 
-我独立完成应用系统开发，将实时视频分析与语音反馈 Demo 扩展到多角色、多端的康复平台。早期 Demo 与后续业务平台属于同一项目的不同阶段。
+I independently developed the application system, extending an early real-time video and speech-feedback prototype into a multi-role, multi-client platform. The prototype and subsequent platform are stages of the same project.
 
-## 我的工作
+## My Contribution
 
-- 拆解医生、患者和管理员的使用流程，设计医患关系、康复计划和训练记录。
-- 开发 FastAPI 后端、医生 Web 端、患者 Web/H5 与微信小程序。
-- 集成实时多模态模型、标准动作视频、摄像头画面及语音反馈。
-- 实现训练会话管理、文件存储、训练打卡、反馈和阶段问卷。
-- 完成部署配置及系统迭代。基础模型和语音服务通过第三方服务接入。
+- Translated clinician, patient and administrator workflows into relationships, plans and training records.
+- Developed the FastAPI backend, clinician web application, patient Web/H5 application and WeChat Mini Program.
+- Integrated multimodal models, reference exercise videos, camera input and speech feedback.
+- Implemented training-session management, file storage, check-ins, feedback and periodic questionnaires.
+- Implemented two-server deployment, workload-based allocation of shared backend functions and cross-server access optimisation. Foundation models and speech capabilities are integrated services.
 
-## 业务流程
+## User Workflow
 
-1. 医生完成注册审核，患者与医生建立绑定关系。
-2. 医生为患者制定个性化康复计划，选择训练项目。
-3. 患者查看计划并进入训练，对照标准动作执行。
-4. 训练界面采集摄像头画面，AI 服务返回训练反馈与语音指导。
-5. 系统记录打卡与反馈，在阶段节点触发评估问卷。
-6. 医生查看患者的训练与反馈记录，继续管理康复计划。
+1. Clinicians register and are approved; patients establish a clinician relationship.
+2. Clinicians prescribe individual plans and select exercises.
+3. Patients open their plans and train alongside reference videos.
+4. The application captures camera input and returns AI feedback and speech guidance.
+5. The system records check-ins and feedback, triggering questionnaires at assessment milestones.
+6. Clinicians review records and adjust ongoing rehabilitation plans.
 
-## 系统架构
+## System Architecture
 
 ```mermaid
 flowchart TB
-    D[医生 Web 端 React] --> API[FastAPI 业务接口]
-    P[患者 Web 与 H5 React] --> API
-    W[患者微信小程序] --> API
-    A[管理员] --> API
-    API --> B[角色审核与医患绑定]
-    API --> C[计划 打卡 问卷与反馈]
-    API --> DB[(MongoDB)]
-    API --> FS[(GridFS 病例与训练文件)]
-    P <-->|实时训练会话| WS[实时会话与 AI 教练服务]
-    WS --> V[OpenCV 标准视频与摄像头帧处理]
-    V --> Q[Qwen Omni Realtime]
-    Q --> F[反馈处理]
-    F --> T[豆包 TTS]
+    P[Patient Web / H5 and WeChat Mini Program] --> PA
+    D[Clinician Web Application] --> DA
+    subgraph MAIN[Primary Patient-side Server: Real-time and Memory-intensive Workloads]
+        PA[Patient Services and High-load Shared Backend]
+        WS[Training Sessions and Real-time Media]
+        V[OpenCV Frame Processing and Motion Analysis]
+        DB[(MongoDB / GridFS)]
+        PA --> WS
+        WS --> V
+        PA --> DB
+    end
+    subgraph DOCTOR[Smaller Clinician-side Server: Lower-load Workloads]
+        DA[Clinician Services and Low-load Shared Backend]
+        B[Patient Relationships Plans Records and Assessments]
+        DA --> B
+    end
+    B <-->|Cross-server Business Access and Data Exchange| PA
+    V --> L[Multimodal LLM]
+    L --> F[Feedback Processing]
+    F --> T[TTS]
     T --> WS
+    WS <-->|Real-time Feedback| P
 ```
 
-图中实时媒体链路以患者 Web/H5 为例；各客户端按其接口与设备能力接入。
+The deployment assigns responsibilities according to real-time requirements and memory load. The primary server hosts patient-facing services, the database and demanding shared backend functions. A smaller server hosts the clinician application and lighter shared functions. Shared backend capabilities are divided by responsibility, with cross-server access connecting clinical management to patient data.
 
-| 层级 | 实现与职责 |
+| Layer | Implementation and responsibility |
 | --- | --- |
-| 客户端 | React 医生端和患者端；微信小程序；摄像头采集、计划查看、训练交互 |
-| 业务服务 | FastAPI；角色、审核、医患绑定、计划、打卡、问卷、文件接口 |
-| 实时训练 | `RehabAICoach` 协调模型连接、图像发送、反馈循环及关闭；`TrainingSessionManager` 管理训练会话 |
-| 视频处理 | `StandardVideoPlayer` 与 `FrameProcessor` 管理标准视频及帧处理 |
-| AI 与语音 | Qwen-Omni-Realtime 进行多模态分析，豆包 TTS 提供语音输出 |
-| 存储 | MongoDB 保存业务记录，GridFS 保存病例与训练文件 |
-| 部署 | Nginx 反向代理、HTTPS 与后端服务配置 |
+| Primary patient-side server | Patient Web/H5 and Mini Program access, training sessions, media processing and high-load shared functions |
+| Smaller clinician-side server | Clinician web application, relationships, plans, record review, periodic assessments and lighter shared functions |
+| Cross-server access | Connects clinician-side APIs to patient-side data, training records and shared capabilities; optimised request paths and access flows |
+| Business services | FastAPI interfaces for roles, approvals, clinician–patient relationships, plans, check-ins, questionnaires and files |
+| Real-time training | Session management coordinates model connections, image transmission, feedback loops, state and cleanup |
+| Video and motion processing | OpenCV, reference-video playback and camera frames; pose keypoints, angle correction and exercise-specific assessment logic |
+| AI and speech | Multimodal LLM analysis and TTS output, described by capability rather than provider |
+| Data and files | MongoDB business records and GridFS clinical / training files, centralised on the primary server |
+| Access and deployment | Nginx, HTTPS, reverse proxies and backend configuration across both servers |
 
-## 模块之间的数据流
+## Data Flow
 
-**业务数据：** 客户端提交注册、绑定或计划操作，FastAPI 校验角色与医患关系后读写 MongoDB。计划连接患者、医生和训练项目；打卡、问卷及反馈提供持续跟进记录，病例与训练文件通过 GridFS 管理。
+**Patient training:** Requests enter the primary server to retrieve plans and establish sessions. The real-time pipeline processes camera frames and reference video; motion analysis and a multimodal LLM produce feedback, with TTS providing speech. Check-ins, questionnaires, feedback and associated files are stored on the primary server.
 
-**实时媒体：** 患者训练界面采集画面，训练会话服务协调标准动作播放与图像处理，把视觉输入送入多模态模型。反馈循环处理模型结果并连接语音服务，通过实时通道将指导传回界面；连接关闭时释放会话及相关任务。
+**Clinical management:** Clinicians use APIs on the smaller server for relationships, plans and assessments. Operations involving patient-side data or shared capabilities access the primary server through cross-server business flows. Management interfaces and real-time training services are organised separately, with centralised storage on the primary server.
 
-**运行组织：** 浏览器与小程序承担各自终端交互，Nginx 提供 HTTPS 及反向代理，业务接口和实时会话运行在后端。第三方模型与 TTS 作为独立依赖接入，业务记录和文件存储独立于模型服务维护。
+**Access optimisation:** After separating deployment, I reviewed request paths between clients, shared APIs and the database, and optimised cross-server calls and data access. Real-time and memory-intensive processing stays on the patient side; the smaller server handles lighter management work. Patient media processing remains within the primary-server training pipeline.
 
-## 实现重点
+## Implementation Highlights
 
-### 从演示验证到完整业务闭环
+### From Prototype to an End-to-end Workflow
 
-早期使用 Python / Tkinter 验证标准视频与摄像头双画面、实时反馈、训练评价及录像。Demo 还提供基于 MMPose 的人物骨架显示选项，用于探索动作呈现方式。随后把实时训练能力纳入 Web 和小程序业务体系，增加角色、计划、打卡与阶段评估。
+An early Python / Tkinter prototype validated reference-video and camera views, feedback, training evaluation and recording. An optional pose-estimation skeleton display supported early motion experiments. The project subsequently incorporated roles, plans, check-ins and assessments into web and Mini Program workflows. The early skeleton display is a prototype capability, rather than a feature claimed for every client.
 
-姿态骨架是早期验证中的技术分支，不把它等同于所有客户端均具备的功能。
+### Coordinating Media, Models and Speech as a Session
 
-### 把视频、模型与语音协调成训练会话
+Training combines video playback, camera input, network connections, model feedback and audio output. Backend sessions coordinate connection setup, frame transmission, feedback and cleanup, maintaining continuity across the exercise rather than treating frames as unrelated requests.
 
-训练同时涉及视频播放、摄像头输入、网络连接、模型反馈和语音播放。后端以训练会话为单位组织这些任务，处理连接建立、图像流、反馈循环及退出清理，避免把每帧分析当作互不关联的请求。
+### Connecting Training to Clinical Follow-up
 
-### 将训练数据连接回医生工作流
+Clinician–patient relationships, plans, daily check-ins, feedback and questionnaires at weeks 2, 4 and 6 connect individual sessions to ongoing care. The patient interface also provides larger text and a simplified mode for older users.
 
-实时指导之外，平台维护医患绑定、训练计划、每日打卡、患者反馈和 2 / 4 / 6 周阶段问卷，使一次训练成为持续管理过程中的一部分。患者端还提供老年模式，支持大字体和简化界面。
+## Challenges and Responses
 
-## 核心难点与处理
+### Aligning Clinical Practice with the Software Model
 
-### 临床使用流程与技术业务模型的对齐
+**Challenge:** Developers and clinicians may interpret a completed exercise, rehabilitation stage or patient condition differently. Working pages and APIs alone do not establish that plans, feedback and assessments match practice. Clinical descriptions must become both understandable patient tasks and usable software data.
 
-**难点：** 项目落地中，开发者对“完成一次训练”的理解，与医生对康复阶段、动作要求和患者状态的理解存在差异。接口与页面能够运行，并不意味着计划、反馈和评估符合实际使用流程。医生的专业描述还需要转化为患者能够理解的任务和软件能够处理的数据。
+**Response:** Broke the workflow into relationships, planning, training, feedback and assessments, then mapped requirements to roles, fields, states and interactions. Actual-use feedback informed revisions to business meanings and operation order. Requirements involving clinical judgement remain subject to clinician interpretation and continued review.
 
-**处理：** 围绕医患绑定、计划制定、训练执行、反馈及阶段评估逐项拆解业务，将角色权限、训练项目、打卡和问卷落入具体模块。以实际使用反馈持续校对业务含义和操作顺序，把临床要求转成明确的字段、状态及交互，而不是仅根据开发侧理解一次性固定流程。
+### Viewpoint-dependent Motion and Angle Errors
 
-**持续优化：** 对需要医生判断的训练要求和阶段评估保留临床解释空间，继续校对软件记录与实际诊疗流程之间的对应关系。
+**Challenge:** Camera direction, distance, body orientation and occlusion change observed keypoints and projected angles. Missing or low-confidence joints, mirrored views and affected-side ambiguity can produce unstable measurements. An apparent difference in movement may originate in the camera view.
 
-### 摄像头视角与动作角度识别偏差
+**Response:** Used pose-estimation experiments and reference / live-video comparison to inspect keypoints and motion. Worked on algorithmic angle correction using joint geometry, viewpoint and exercise requirements. Exercise-specific counting, speed and hold logic also needs to tolerate jitter and timing errors. Calibration and clinical comparison remain ongoing; the project does not claim a fixed validated angle-measurement accuracy.
 
-**难点：** 同一动作在不同拍摄方向、距离及身体朝向下呈现不同的二维投影，遮挡也会影响关键点定位。直接依据画面或模型描述判断动作角度，可能将拍摄差异误判为动作幅度不足。当前角度识别准确性仍是项目的主要技术问题。
+### Splitting Workloads Without Breaking Cross-server Workflows
 
-**处理基础：** 早期 Demo 接入 MMPose 骨架显示，为观察关键点与动作表现提供技术基础；训练流程保留标准视频与实时画面对照，将视觉输入、反馈逻辑和临床动作要求分别组织。
+**Challenge:** Continuous media processing, model interaction and session state have higher real-time and memory demands than clinician planning and record review. Separating servers also creates access dependencies between clinical operations and patient data, files and training records.
 
-**修正路径：** 角度修正需要结合关键点几何关系、拍摄视角和动作规范开展算法处理，并与医生对动作的判断核对。优化工作同时需要明确哪些动作和取景条件允许可靠评价，避免将不稳定的图像判断直接表达为确定的训练结论。相关校准与算法修正仍需持续验证，目前不宣称已达到固定的角度测量精度。
+**Response:** Placed patient services, storage and demanding shared functions on the primary server, and clinician services and lighter functions on the smaller server. Reviewed business entry points, request routing and data exchange so clinical management could reach the required records while patient training remained concentrated on the primary server.
 
-### 面向中老年用户的易用性优化
+### Usability for Middle-aged and Older Patients
 
-**难点：** 中老年用户在文字阅读、摄像头操作、理解训练指令及连续操作方面存在不同需求。康复训练还涉及动作执行，复杂导航和过多提示会增加使用负担。
+**Challenge:** Reading, camera operation, exercise instructions and multi-step navigation create different demands for older users, particularly while they are moving.
 
-**处理：** 患者端提供老年模式、大字体和简化界面；训练环节组合标准动作视频与语音反馈，将计划、进入训练、执行动作和完成打卡组织成清晰路径。医生端保留较完整的管理信息，患者端聚焦当前训练任务，降低两类用户在同一流程中的信息负担。
+**Response:** Added larger text and simplified patient interactions, combining reference video and speech feedback around a clear plan → train → check-in flow. Clinician interfaces retain fuller management information. Button visibility, wording, speech pacing and steps are refined through use.
 
-**持续优化：** 结合实际使用情况调整按钮可见性、提示表达、语音节奏及操作步骤，尤其关注用户能否理解下一步操作和训练反馈。适老化贯穿训练流程与交互迭代。
+## Outcomes and Evaluation
 
-## 工程成果与评估边界
+Delivered clinician web, patient Web/H5 and Mini Program applications, backend services and real-time training modules, alongside the early prototype. These demonstrate engineering implementation of rehabilitation-support software. Clinical effectiveness, motion-assessment accuracy and adherence improvements require dedicated evaluation.
 
-形成医生端、患者 Web/H5、患者小程序、后端服务及实时训练模块，并保留早期多模态 Demo。该项目展示的是康复辅助软件与交互系统的工程实现；模型反馈不等同于临床诊断，临床疗效、动作判别准确率和患者依从性改善需要专项评估。
-
-值得进一步研究的问题包括动作评价的一致性、反馈时机与端到端延迟，以及老年用户对语音指导的理解和使用体验。这里不将这些问题写成已经取得的研究结论。
+Further evaluation can examine motion-assessment consistency, feedback timing, end-to-end latency and older users' understanding of guidance. These remain evaluation questions rather than established research findings.
