@@ -5,3 +5,6 @@
 !/projects/
 !/media/
 __pycache__/
+
+# Videos are hosted as GitHub attachments and embedded on project pages.
+/media/**/*.mp4
