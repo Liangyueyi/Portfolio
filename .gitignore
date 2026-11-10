@@ -1,0 +1,7 @@
+# Publish only the Chinese portfolio and its presentation materials.
+/*
+!/.gitignore
+!/README.md
+!/projects/
+!/media/
+__pycache__/
