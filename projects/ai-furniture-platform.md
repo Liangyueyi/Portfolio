@@ -14,7 +14,7 @@ Furniture design and service platform demonstration.
 
 ## Project Scope
 
-One furniture project combining design tools and a WeChat after-sales application. The design side connects CAD drawings, spatial white models, references and visualisation generation. The service side connects text, image and speech enquiries with tickets and management analysis. The modules support the same business while retaining task-specific workflows.
+Walls and cabinets can look similar in a CAD drawing. If they are misclassified, the error carries into the visualisation. The design workflow combines geometry and AI-assisted interpretation in an editable 3D model so designers can inspect the layout before generating images. The WeChat after-sales app connects text, image and voice enquiries with tickets that staff can track through resolution.
 
 I independently developed and integrated the applications, including front ends, back ends, design workflows, AI services and deployment. The design tools and Mini Program reside in separate codebases. Existing modules use different storage arrangements; they are not presented as sharing one database or having fully automated data synchronisation.
 

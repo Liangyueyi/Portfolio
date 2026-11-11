@@ -14,7 +14,7 @@ Training motion-recognition demo: passive forward arm elevation, with the partic
 
 ## Background
 
-Rehabilitation software needs to translate clinician-prescribed plans into exercises that patients can understand, perform and record. This platform brings plans, training feedback and periodic assessments into one workflow, connecting clinical management with everyday patient training.
+Between appointments, patients need to understand what to practise and how to follow the prescribed routine. Clinicians need a record of what patients completed. The platform connects prescriptions, reference videos, camera-based AI feedback and check-ins so that home training can be reviewed during follow-up.
 
 I independently developed the application system, extending an early real-time video and speech-feedback prototype into a multi-role, multi-client platform. The prototype and subsequent platform are stages of the same project.
 

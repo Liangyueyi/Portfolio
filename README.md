@@ -8,7 +8,7 @@
 
 ### 01 Medical Rehabilitation Platform
 
-Independently developed a multi-client platform connecting clinician-prescribed plans, patient training, real-time AI feedback, training records and periodic assessments. The project evolved from a multimodal prototype into clinician web, patient Web/H5 and WeChat applications. A two-server deployment separates patient-side real-time and memory-intensive workloads from lighter clinician-side services.
+Patients need guidance between appointments, and clinicians need records they can review at follow-up. I built a platform that turns prescribed plans into guided exercises, uses camera input to provide AI feedback during training, and records sessions for clinician review. I separated real-time training and lighter management services across two servers to match their different resource needs.
 
 - **Focus:** Real-time video, multimodal integration, speech feedback, training sessions, clinical workflows and cross-server access optimisation.
 - **Technology:** FastAPI, React, WeChat Mini Programs, MongoDB / GridFS, OpenCV, multimodal LLM and TTS.
@@ -16,7 +16,7 @@ Independently developed a multi-client platform connecting clinician-prescribed 
 
 ### 02 AI Furniture Design & After-sales Platform
 
-Independently developed a furniture project spanning design tools and after-sales services. The design workflow processes CAD drawings, editable 3D white models and visualisations; the WeChat application handles AI support, service tickets and management analysis.
+Furniture designers need to check room geometry before generating visualisations, while after-sales staff need a way to track customer enquiries through resolution. I built an editable 3D workspace that combines CAD geometry with AI-assisted interpretation, and a WeChat app that connects text, photo and voice enquiries to service tickets.
 
 - **Focus:** CAD image processing, Three.js interaction, generative design workflows, multimodal support and service-ticket lifecycles.
 - **Technology:** FastAPI, Three.js, WeChat Mini Programs, PostgreSQL, Redis, vision-language and image-generation services, LLM and ASR.
@@ -24,7 +24,7 @@ Independently developed a furniture project spanning design tools and after-sale
 
 ### 03 Embedded AI Travel Companion & Voice Terminal
 
-A physical embedded project with independently developed terminal applications, supporting services and speech integration. Connects ESP32 hardware, Wi-Fi / 4G, GPS / BLE, map visualisation and an ASR–LLM–TTS pipeline. Following breadboard validation, I designed a PCB and assembled a demo with a 3D-printed enclosure.
+A traveller on the move needs to ask questions without stopping to use a screen. I built a voice terminal that uses location context in its responses and tested how it handles natural pauses over Wi-Fi and 4G. After validating the breadboard prototype, I designed a PCB and assembled the demo in a 3D-printed enclosure.
 
 - **Focus:** Embedded development, hardware–software integration, streaming audio, device and session management, and location-aware interaction.
 - **Technology:** ESP32 / C++, Python, FastAPI, WebSocket, BLE, React maps, ASR and TTS.

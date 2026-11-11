@@ -14,7 +14,7 @@ Integrated demo: after functional testing, I designed a PCB and assembled the de
 
 ## Background
 
-A physical terminal for AI-assisted travel companionship and voice conversation, combining hardware, firmware, networking and backend services. The device captures audio, communicates over Wi-Fi or 4G and plays spoken responses, while GPS, BLE and maps provide location context.
+For a traveller using the device on the move, a natural pause should not cause a question to be cut off, and waiting too long makes the conversation feel slow. The terminal combines ASR, LLM and TTS with GPS and BLE context. I tuned the end-of-speech decision and tested the voice pipeline over Wi-Fi and 4G.
 
 I independently developed and integrated the terminal application and supporting system, including hardware–software debugging. Breadboard modules first validated audio, communication and conversation flows. After testing, I designed a PCB and used a 3D-printed enclosure to build the integrated demo shown above.
 
