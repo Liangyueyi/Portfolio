@@ -149,7 +149,7 @@ Coursework and practical projects completed during my BSc in Computer Science at
 | Project | Scope and technology | My contribution |
 | --- | --- | --- |
 | Clinical Data Analysis & Retinal Image Processing | Pandas / Seaborn analysis of bilateral clinical data from 244 patients; OpenCV perspective correction, denoising, illumination / colour balancing and inpainting | Individual work; preprocessing prepared inputs for an existing classifier |
-| CIFAR-100 Classification & Generation | Lightweight PyTorch CNN and convolutional VAE; latent-vector interpolation | Individual work; a 99,022-parameter CNN achieved 40.9% test accuracy after 10,000 optimisation steps |
+| CIFAR-100 Classification & Generation | Lightweight image classification and image generation in PyTorch | Independently implemented a 99,022-parameter CNN and a convolutional VAE, and explored latent-space interpolation |
 | Multi-server Load Allocation Simulation | C simulation comparing blocking rates for JSQ, Power-of-d and threshold policies under different service-time distributions | Individual work; nine comparison scenarios |
 | IBM EDFLIX Online Learning Platform | PHP, JavaScript, MySQL and WordPress; bookmarks, comments, five-star ratings and personalised recommendations | Team project; developed all front-end, back-end and database components, including porting recommendation logic to PHP |
 | Python 3D Rendering & Physics Interaction Engine | Camera control, dynamic lighting, collision detection and physical responses | Individually extended a university-provided engine and built a demonstration scene |
