@@ -2,6 +2,8 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
+> **Portfolio note.** Company confidentiality agreements and patent-related considerations limit what I can disclose, so the original project source code is kept private. This portfolio presents the system architectures, my technical contributions, and the outcomes through screenshots and screen recordings where available.
+
 ## Featured Projects
 
 ### 01 Medical Rehabilitation Platform
